@@ -1,6 +1,6 @@
 import sqlite3
 
-db_connection = sqlite3.connect("bot_data.db")
+db_connection = sqlite3.connect("db/bot_data.db")
 cursor = db_connection.cursor()
 cursor.execute("PRAGMA foreign_keys = ON;")
 
@@ -87,12 +87,12 @@ def viewActivities(user_id, inp):
 
 def clearData():
     clearTasks()
-    insert_query = "DELETE FROM Activities WHERE DATE(date_end_time)<=DATE('now')"
+    insert_query = "DELETE FROM Activities WHERE DATE(date_end_time)<DATE('now')"
     cursor.execute(insert_query)
     db_connection.commit()
 
 def clearTasks():
-    insert_query = "DELETE FROM Tasks WHERE DATE(deadline)<=DATE('now')"
+    insert_query = "DELETE FROM Tasks WHERE DATE(deadline)<DATE('now')"
     cursor.execute(insert_query)    
     db_connection.commit()
 

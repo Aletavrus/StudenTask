@@ -1,9 +1,10 @@
-from student import Student
+from dnevniklib.student import Student
 from requests import get
-from customtypes import Homework as HomeworkType
+from dnevniklib.customtypes import Homework as HomeworkType
 import json
-from datetime import date, timedelta, datetime
-from utils import utils
+from datetime import date, timedelta
+from dnevniklib.utils import utils
+
 
 class Homeworks:
     def __init__(self, student: Student):

@@ -1,5 +1,5 @@
 from requests import get
-from errors import DnevnikTokenError
+from dnevniklib.errors import DnevnikTokenError
 
 
 class Student:
