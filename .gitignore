@@ -26,6 +26,8 @@ share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+config.txt
+bot_data.db
 MANIFEST
 
 # PyInstaller
