@@ -2,7 +2,6 @@ from db import db
 from dnevniklib.student import Student
 from dnevniklib.homeworks import Homeworks
 from dnevniklib.errors import DnevnikTokenError
-import db
 
 import asyncio
 
@@ -108,8 +107,8 @@ def createKb() -> ReplyKeyboardMarkup:
     return keyboard
 
 async def run():
-    # db.db.clearData()
-    db.db.create()
+    # db.clearData()
+    db.create()
     dp.update.middleware(CommandCancelMiddleware())
     await dp.start_polling(bot)
     await FSMContext.clear()
@@ -146,13 +145,13 @@ async def newToken(message: Message, state: FSMContext):
         await message.answer("Токен не был изменен")
     else:
         token = message.text
-        db.db.addToken(message.from_user.id, token)
+        db.addToken(message.from_user.id, token)
         await message.answer("Токен успешно обновлен")
     await state.clear()
 
 @dp.message(Command('homework'))
 async def commandHomework(message: Message):
-    auth_token = db.db.getToken(message.from_user.id)
+    auth_token = db.getToken(message.from_user.id)
     try:
         stud = Student(auth_token)
     except DnevnikTokenError as e:
@@ -191,7 +190,7 @@ async def registerTaskDeadline(message: Message, state: FSMContext):
         await state.update_data(deadline = message.text)
         data = await state.get_data()
         await message.answer(f'Ваше задание: {data["title"]}\nОписание: {data["description"]}\nДедлайн: {data["deadline"]}')
-        db.db.addTask(data, message.from_user.id)
+        db.addTask(data, message.from_user.id)
         await state.clear()
     except ValueError as e:
         await message.answer("Неправильный формат даты, попробуйте еще раз")
@@ -238,14 +237,14 @@ async def registerActivityLength(message: Message, state: FSMContext):
         end_time = date + timedelta(hours=time.hour, minutes=time.minute)
         await message.answer(f'Ваше занятие: {data["title"]}\nОписание: {data["description"]}\nДата и время начала: {data["date_start_time"]}\nВремя окончания: {str(end_time)[:-3]}')
         data["date_end_time"] = str(end_time)[:-3]
-        db.db.addActivity(data, message.from_user.id)
+        db.addActivity(data, message.from_user.id)
         await state.clear()
     except Exception as e:
         await message.answer(f"Неправильный формат времени, попробуйте еще раз {e}")
 
 @dp.message(Command('viewTasks'))
 async def commandViewTasks(message: Message):
-    result = db.db.getTasks(message.from_user.id)
+    result = db.getTasks(message.from_user.id)
     output = ""
     for i in range(len(result)):
         row = result[i]
@@ -260,7 +259,7 @@ async def commandViewTasks(message: Message):
 
 @dp.message(Command("deleteTasks"))
 async def cancel(message: Message):
-    db.db.clearTasks()
+    db.clearTasks()
     await message.answer("Прошедшие задания успешно удалены")
 
 @dp.message(Command('timetable'))
@@ -274,7 +273,7 @@ async def timetable(message: Message, state: FSMContext):
     try:
         dat = datetime.date(year = int(inp[:4]), month = int(inp[5:7]), day = int(inp[8:]))
         output = ""
-        result = db.db.viewActivities(message.from_user.id, inp)
+        result = db.viewActivities(message.from_user.id, inp)
         if len(result)!=0:
             for i in range(len(result)):
                 row = result[i]
