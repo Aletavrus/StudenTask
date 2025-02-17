@@ -137,7 +137,7 @@ async def cancelCommand(message: Message, state: FSMContext):
 async def activateToken(message: Message, state: FSMContext):
     await state.set_state(Token.active)
     await message.answer("""Отправьте ваш токен. 
-Если вы случайно нажали команду напишите: Ошибка (регистр такой же)""")
+Если вы случайно нажали команду, напишите: Ошибка (регистр такой же)""")
 
 @dp.message(Token.active)
 async def newToken(message: Message, state: FSMContext):
