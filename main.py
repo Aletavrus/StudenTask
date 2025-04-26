@@ -107,7 +107,7 @@ def createKb() -> ReplyKeyboardMarkup:
     return keyboard
 
 async def run():
-    # db.clearData()
+    db.clearData()
     db.create()
     dp.update.middleware(CommandCancelMiddleware())
     await dp.start_polling(bot)
@@ -154,16 +154,16 @@ async def commandHomework(message: Message):
     auth_token = db.getToken(message.from_user.id)
     try:
         stud = Student(auth_token)
+        hm = Homeworks(stud)
+        res = hm.get_homework_by_date()
+        output = ""
+        for i in res:
+            output = output + i.subject_name + ": " + i.description + "\nДедлайн: " + i.created_at + "\n" + "\n"
+        if output == "":
+            output = "На следующие 7 дней нет заданий"
+        await message.answer(output)
     except DnevnikTokenError as e:
         await message.answer("У вас нерабочий токен авторизации в МЭШ. Попробуйте добавить еще раз по команде /newToken. Инструкция получения /start")
-    hm = Homeworks(stud)
-    res = hm.get_homework_by_date()
-    output = ""
-    for i in res:
-        output = output + i.subject_name + ": " + i.description + "\nДедлайн: " + i.created_at + "\n" + "\n"
-    if output =="":
-        output = "На следующие 7 дней нет заданий"
-    await message.answer(output)
 
 @dp.message(Command('addTask'))
 async def commandAddTask(message, state: FSMContext):
@@ -240,7 +240,7 @@ async def registerActivityLength(message: Message, state: FSMContext):
         db.addActivity(data, message.from_user.id)
         await state.clear()
     except Exception as e:
-        await message.answer(f"Неправильный формат времени, попробуйте еще раз {e}")
+        await message.answer(f"Неправильный формат времени, попробуйте еще раз")
 
 @dp.message(Command('viewTasks'))
 async def commandViewTasks(message: Message):
