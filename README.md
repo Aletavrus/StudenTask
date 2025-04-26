@@ -10,3 +10,4 @@ StudenTask - телеграм-бот для отслеживания задач 
 
 ## Использование
 https://t.me/StudenTask_bot
+@StudenTask_bot
