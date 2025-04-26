@@ -9,5 +9,5 @@ StudenTask - телеграм-бот для отслеживания задач 
 5. Dnevniklib - https://github.com/xd2dd/dnevniklib
 
 ## Использование
-https://t.me/StudenTask_bot
+https://t.me/StudenTask_bot <br>
 @StudenTask_bot
